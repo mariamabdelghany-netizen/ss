@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitation Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            background-color: #000;
+        }
+
+        /* ── SPLASH ──────────────────────────────────────────────── */
+        #splash {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: radial-gradient(ellipse at 50% 60%, #1e0509 0%, #060102 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease;
+        }
+
+        #splash.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* ── ENVELOPE IMAGE SWITCHER ─────────────────────────────── */
+        .env-btn {
+            position: relative;
+            cursor: pointer;
+            width: min(420px, 85vw);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .env-img {
+            display: block;
+            width: 100%;
+            border-radius: 8px;
+            box-shadow:
+                0 50px 120px rgba(0, 0, 0, 0.9),
+                0 0 0 1px rgba(200, 160, 80, 0.2);
+            transition: transform 0.2s ease;
+        }
+
+        .env-btn:hover .env-img {
+            transform: scale(1.015);
+        }
+
+        .env-btn:active .env-img {
+            transform: scale(0.985);
+        }
+
+        /* Hidden open image */
+        #env-open {
+            display: none;
+        }
+
+        /* Hint text */
+        .tap-hint {
+            font-family: 'Outfit', sans-serif;
+            color: rgba(255, 220, 150, 0.6);
+            font-size: 0.85rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-top: 28px;
+            animation: blink 2.2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Opening flash effect */
+        @keyframes openFlash {
+            0% {
+                filter: brightness(1);
+            }
+
+            30% {
+                filter: brightness(1.4);
+            }
+
+            100% {
+                filter: brightness(1);
+            }
+        }
+
+        .env-btn.opening .env-img {
+            animation: openFlash 0.6s ease forwards;
+        }
+
+        /* ── MAIN CONTENT ────────────────────────────────────────── */
+        .gif-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .gif-wrapper {
+            position: relative;
+            width: 100%;
+            display: block;
+        }
+
+        .gif-wrapper img,
+        .gif-container img {
+            display: block;
+            width: 100%;
+            height: auto;
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        /* Countdown overlay */
+        .countdown-container {
+            position: absolute;
+            top: 43.2%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2vw;
+            width: 90%;
+            max-width: 600px;
+            pointer-events: none;
+        }
+
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4px 10px;
+            min-width: 80px;
+            flex: 1;
+        }
+
+        .countdown-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.8rem;
+            font-weight: 700;
+            color: #6a1219;
+            line-height: 1;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .countdown-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #6a1219;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .countdown-item {
+                min-width: 60px;
+            }
+
+            .countdown-value {
+                font-size: 2.6rem;
+            }
+
+            .countdown-label {
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .countdown-item {
+                min-width: 40px;
+            }
+
+            .countdown-value {
+                font-size: 1.8rem;
+            }
+
+            .countdown-label {
+                font-size: 0.6rem;
+            }
+
+            .countdown-container {
+                gap: 1vw;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── ENVELOPE SPLASH ──────────────────────────────────── -->
+    <div id="splash">
+        <div class="env-btn" id="env-btn">
+            <img id="env-closed" class="env-img" src="envelope_closed.png" alt="Tap to open your invitation">
+            <img id="env-open" class="env-img" src="envelope_open.png" alt="Opening invitation">
+        </div>
+        <p class="tap-hint">Tap to open</p>
+    </div>
+
+    <!-- ── AUDIO ────────────────────────────────────────────── -->
+    <audio id="bg-music" src="background.mp3" loop preload="auto"></audio>
+
+    <!-- ── INVITATION CONTENT ───────────────────────────────── -->
+    <div class="gif-container">
+        <div class="gif-wrapper">
+            <img src="1.gif" alt="Part 1">
+            <div class="countdown-container">
+                <div class="countdown-item">
+                    <span id="days" class="countdown-value">00</span>
+                    <span class="countdown-label">Days</span>
+                </div>
+                <div class="countdown-item">
+                    <span id="hours" class="countdown-value">00</span>
+                    <span class="countdown-label">Hrs</span>
+                </div>
+                <div class="countdown-item">
+                    <span id="minutes" class="countdown-value">00</span>
+                    <span class="countdown-label">Min</span>
+                </div>
+                <div class="countdown-item">
+                    <span id="seconds" class="countdown-value">00</span>
+                    <span class="countdown-label">Sec</span>
+                </div>
+            </div>
+        </div>
+        <img src="2.gif" alt="Part 2">
+        <img src="33.gif" alt="Part 3">
+    </div>
+
+    <script>
+        const audio = document.getElementById('bg-music');
+        const splash = document.getElementById('splash');
+        const envBtn = document.getElementById('env-btn');
+        const envClosed = document.getElementById('env-closed');
+        const envOpen = document.getElementById('env-open');
+        const hintEl = document.querySelector('.tap-hint');
+        let opened = false;
+
+        envBtn.addEventListener('click', () => {
+            if (opened) return;
+            opened = true;
+
+            // 1. Add opening flash
+            envBtn.classList.add('opening');
+
+            // 2. After short delay — swap to open envelope image
+            setTimeout(() => {
+                envClosed.style.display = 'none';
+                envOpen.style.display = 'block';
+                hintEl.style.opacity = '0';
+            }, 300);
+
+            // 3. Play music (we are inside a real click handler — always works)
+            audio.play().catch(err => console.warn('Audio:', err));
+
+            // 4. Fade out splash after envelope is shown open
+            setTimeout(() => {
+                splash.classList.add('fade-out');
+            }, 1400);
+
+            // 5. Remove splash entirely
+            setTimeout(() => splash.remove(), 2450);
+        });
+
+        // Loop audio after 30 seconds
+        audio.addEventListener('timeupdate', () => {
+            if (audio.currentTime >= 30) {
+                audio.currentTime = 0;
+                audio.play().catch(() => { });
+            }
+        });
+
+        // ── Countdown to 2 Feb 2027 ─────────────────────────────
+        const target = new Date('2027-02-02T00:00:00').getTime();
+
+        function tick() {
+            const d = target - Date.now();
+            const pad = n => String(Math.max(0, n)).padStart(2, '0');
+            if (d <= 0) {
+                ['days', 'hours', 'minutes', 'seconds']
+                    .forEach(id => document.getElementById(id).innerText = '00');
+                return;
+            }
+            document.getElementById('days').innerText = pad(Math.floor(d / 86400000));
+            document.getElementById('hours').innerText = pad(Math.floor((d % 86400000) / 3600000));
+            document.getElementById('minutes').innerText = pad(Math.floor((d % 3600000) / 60000));
+            document.getElementById('seconds').innerText = pad(Math.floor((d % 60000) / 1000));
+        }
+
+        setInterval(tick, 1000);
+        tick();
+    </script>
+</body>
+
+</html>
